@@ -4,7 +4,7 @@ const BN = require('bn.js');
 const electrumWords = require('./electrum-words').electrumWords;
 
 const epoch = 1590969600; //1st June 2020
-const timeStep = 2629746;
+const timeStep = 2629746; //30.436875 days = 1/12 of the Gregorian year
 const mnemonicWordsLen = 14;
 const mnemonicErrorCorrectionWordsLen = 1;
 
@@ -178,6 +178,10 @@ class Seed {
       s += 'quantized birthday: ' + this.birthday + '\n';
       s += 'unquantized birthday: ' + Seed.unquantizeTimestampToDateObj(this.birthday).toUTCString() + '\n';
       s += 'privateKeySeedHex: ' + this.privateKeySeed.toString("hex") + '\n';
+      s += 'mnemonic: ' + this.toMnemonic() + '\n';
+    }
+    if(this.parseMnemonicResult && this.parseMnemonicResult.specifiedMnemonicWordString) {
+      s += 'parseMnemonicResult.specifiedMnemonicWordString: ' + this.parseMnemonicResult.specifiedMnemonicWordString + '\n';
     }
     if(this.parseMnemonicResult) {
       s += 'parseMnemonicResult.mnemonicUsable: ' + this.parseMnemonicResult.mnemonicUsable + '\n';
