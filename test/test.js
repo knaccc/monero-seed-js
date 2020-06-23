@@ -2,16 +2,18 @@ const Seed = require('../index').Seed;
 const BN = require('bn.js');
 const assert = require('assert');
 
-const mnemonic = 'able settle stadium bracket hill rate juice bar among another junior bounce lake process';
-let seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG);
-assert(seed.coinFlag===0x539);
-assert(seed.birthday.eq(new BN(38)));
-assert(seed.privateKeySeed.eq(new BN('b9a7c6b35db22f184983f098f2469be5', 16)));
-assert(seed.parseMnemonicResult.mnemonicUsable===true);
-assert(seed.parseMnemonicResult.state==='specifiedSeedIsValid');
-assert(seed.toMnemonic()===mnemonic);
-
 {
+  let mnemonic = 'able settle stadium bracket hill rate juice bar among another junior bounce lake process';
+  let seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG);
+  assert(seed.coinFlag === 0x539);
+  assert(seed.birthday == 38);
+  assert(seed.privateKeySeed.eq(new BN('b9a7c6b35db22f184983f098f2469be5', 16)));
+  assert(seed.parseMnemonicResult.mnemonicUsable === true);
+  assert(seed.parseMnemonicResult.state === 'specifiedSeedIsValid');
+  assert(seed.toMnemonic() === mnemonic);
+}
+{
+  let mnemonic = 'able settle stadium bracket hill rate juice bar among another junior bounce lake process';
   let seed2 = Seed.fromMnemonic(mnemonic.replace('stadium', 'supercalifragilisticexpialidocious'), Seed.MONERO_COINFLAG);
   assert(seed.equals(seed2));
   assert(seed2.parseMnemonicResult.detectedErasureWord === 'supercalifragilisticexpialidocious');
@@ -57,6 +59,7 @@ assert(seed.toMnemonic()===mnemonic);
   assert(seed2.birthday == 115);
 }
 {
+  // for compatibility with tevador's code (not currently passing)
   let seed2 = Seed.fromMnemonic('test park taste security oxygen decorate essence ridge ship fish vehicle dream fluid pattern', Seed.MONERO_COINFLAG);
   console.log(seed2.toString());
   assert(seed2.parseMnemonicResult.mnemonicUsable === true);
