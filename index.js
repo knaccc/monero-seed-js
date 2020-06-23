@@ -123,7 +123,7 @@ class Seed {
     let flaggedDataInt32Array = Seed.flag(unflaggedDataInt32Array, coinFlag);
     return flaggedDataInt32Array.reduce((a,b)=>a+' '+electrumWords.en[b], '').trim();
   }
-  static unflaggedDataInt32ArrayToBN(a) {
+  static unflaggedPayloadInt32ArrayToBN(a) {
     let n = new BN(0);
     for(let i=0; i<a.length; i++) n.imuln(2048).iaddn(a[i]);
     return n;
@@ -136,9 +136,7 @@ class Seed {
     let parseMnemonicResult = Seed.parseMnemonic(specifiedMnemonicWordString, coinFlag);
 
     if(parseMnemonicResult.mnemonicUsable) {
-      let data = Seed.unflaggedDataInt32ArrayToBN(parseMnemonicResult.validUnflaggedDataInt32Array);
-      let payload = data.ushrn(11);
-      let checksum = data.maskn(11);
+      let payload = Seed.unflaggedPayloadInt32ArrayToBN(parseMnemonicResult.validUnflaggedDataInt32Array.slice(1, 14));
       let reserved = payload.ushrn(10 + 128);
       let birthday = payload.ushrn(128).maskn(10);
       let privateKeySeed = payload.maskn(128);
@@ -157,8 +155,7 @@ class Seed {
       let p = payloadLen-(i+1);
       payloadInt32Array[p] = payload.maskn((i+1)*11).ushrn(11*i);
     }
-    let unflaggedDataInt32Array = concatTypedArrays(payloadInt32Array, new Uint32Array(1));
-    unflaggedDataInt32Array = reedSolomonEncode(unflaggedDataInt32Array);
+    let unflaggedDataInt32Array = reedSolomonEncode(payloadInt32Array);
     let s = Seed.unflaggedDataInt32ArrayToMnemonic(unflaggedDataInt32Array, this.coinFlag);
 
     // do sanity check to see if we can parse the mnemonic we've just created
@@ -221,13 +218,21 @@ function concatTypedArrays(a, b) {
 }
 
 const reedSolomonEncoder = new reedSolomon.ReedSolomonEncoder(new reedSolomon.GenericGF(2053, 2048, 1));
-function reedSolomonEncode(unflaggedDataInt32Array) {
-  let r = unflaggedDataInt32Array.slice();
+function reedSolomonEncode(unflaggedPayloadInt32Array) {
+  // expects an array of 13 word indices. will return an array of 14 word indices, where the first is the checksum
+
+  let r = concatTypedArrays(unflaggedPayloadInt32Array, new Uint32Array(1));
   reedSolomonEncoder.encode(r, mnemonicErrorCorrectionWordsLen);
+
+  // reorder such that the checksum appears first instead of last
+  let checksum = r[13];
+  for(let i=13; i>0; i--) r[i] = r[i-1];
+  r[0] = checksum;
+
   return r;
 }
 function reedSolomonCheck(unflaggedDataInt32Array) {
-  return unflaggedDataInt32Array.toString()==reedSolomonEncode(unflaggedDataInt32Array).toString();
+  return unflaggedDataInt32Array.toString()==reedSolomonEncode(unflaggedDataInt32Array.slice(1, 14)).toString();
 }
 function reedSolomonRepair(unflaggedDataInt32Array, erasureIndex) {
   let r = unflaggedDataInt32Array.slice();
