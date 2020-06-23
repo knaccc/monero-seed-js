@@ -220,17 +220,13 @@ function concatTypedArrays(a, b) {
 const reedSolomonEncoder = new reedSolomon.ReedSolomonEncoder(new reedSolomon.GenericGF(2053, 2048, 1));
 function reedSolomonEncode(unflaggedPayloadInt32Array) {
   // expects an array of 13 word indices. will return an array of 14 word indices, where the first is the checksum
-
-  let r = concatTypedArrays(unflaggedPayloadInt32Array, new Uint32Array(1));
+  // for compatibility with C implementation, provide payload in reverse order to encoder
+  let r = concatTypedArrays(unflaggedPayloadInt32Array.slice().reverse(), new Uint32Array(1));
   reedSolomonEncoder.encode(r, mnemonicErrorCorrectionWordsLen);
-
-  // reorder such that the checksum appears first instead of last
-  let checksum = r[13];
-  for(let i=13; i>0; i--) r[i] = r[i-1];
-  r[0] = checksum;
-
+  r = concatTypedArrays(new Uint32Array([r[13]]),unflaggedPayloadInt32Array);
   return r;
 }
+
 function reedSolomonCheck(unflaggedDataInt32Array) {
   return unflaggedDataInt32Array.toString()==reedSolomonEncode(unflaggedDataInt32Array.slice(1, 14)).toString();
 }

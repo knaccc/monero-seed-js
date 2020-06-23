@@ -2,43 +2,43 @@ const Seed = require('../index').Seed;
 const BN = require('bn.js');
 const assert = require('assert');
 
-let mnemonic = 'forest impact deposit predict impulse goddess position lunar erupt track story face blur end';
+let mnemonic = 'grass impact cross scrub arrow chalk pass taste decide crush push lyrics scale slim';
 {
   let seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG);
   assert(seed.coinFlag === 0x539);
   assert(seed.birthday == 115);
-  assert(seed.privateKeySeed.eq(new BN('b1535c8b21a870a133f34d68a3061a4c', 16)));
+  assert(seed.privateKeySeed.eq(new BN('418383292fa0bbc4e31a8aeb0af0065e', 16)));
   assert(seed.parseMnemonicResult.mnemonicUsable === true);
   assert(seed.parseMnemonicResult.state === 'specifiedSeedIsValid');
   assert(seed.toMnemonic() === mnemonic);
 }
 {
   let seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG);
-  let seed2 = Seed.fromMnemonic(mnemonic.replace('lunar', 'supercalifragilisticexpialidocious'), Seed.MONERO_COINFLAG);
+  let seed2 = Seed.fromMnemonic(mnemonic.replace('chalk', 'supercalifragilisticexpialidocious'), Seed.MONERO_COINFLAG);
   assert(seed.equals(seed2));
   assert(seed2.parseMnemonicResult.detectedErasureWord === 'supercalifragilisticexpialidocious');
-  assert(seed2.parseMnemonicResult.erasureWordReplacement === 'lunar');
-  assert(seed2.parseMnemonicResult.erasureIndex === 7);
+  assert(seed2.parseMnemonicResult.erasureWordReplacement === 'chalk');
+  assert(seed2.parseMnemonicResult.erasureIndex === 5);
   assert(seed2.parseMnemonicResult.state === 'repaired');
   assert(seed2.parseMnemonicResult.mnemonicUsable === true);
 }
 {
-  let seed2 = Seed.fromMnemonic(mnemonic.replace('lunar', 'lu nar'), Seed.MONERO_COINFLAG);
+  let seed2 = Seed.fromMnemonic(mnemonic.replace('chalk', 'cha lk'), Seed.MONERO_COINFLAG);
   assert(seed2.parseMnemonicResult.mnemonicUsable === false);
   assert(seed2.parseMnemonicResult.state === 'tooManyWords');
 }
 {
-  let seed2 = Seed.fromMnemonic(mnemonic.replace('lunar', ''), Seed.MONERO_COINFLAG);
+  let seed2 = Seed.fromMnemonic(mnemonic.replace('chalk', ''), Seed.MONERO_COINFLAG);
   assert(seed2.parseMnemonicResult.mnemonicUsable === false);
   assert(seed2.parseMnemonicResult.state === 'notEnoughWords');
 }
 {
-  let seed2 = Seed.fromMnemonic(mnemonic.replace('lunar', 'xxx').replace('story', 'yyy'), Seed.MONERO_COINFLAG);
+  let seed2 = Seed.fromMnemonic(mnemonic.replace('chalk', 'xxx').replace('push', 'yyy'), Seed.MONERO_COINFLAG);
   assert(seed2.parseMnemonicResult.mnemonicUsable === false);
   assert(seed2.parseMnemonicResult.state === 'tooManyUnrecognizedWords');
 }
 {
-  let seed2 = Seed.fromMnemonic(mnemonic.replace('lunar', 'bounce'), Seed.MONERO_COINFLAG);
+  let seed2 = Seed.fromMnemonic(mnemonic.replace('chalk', 'bounce'), Seed.MONERO_COINFLAG);
   assert(seed2.parseMnemonicResult.mnemonicUsable === false);
   assert(seed2.parseMnemonicResult.state === 'reedSolomonCheckFailed');
 }
