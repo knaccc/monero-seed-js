@@ -12,6 +12,7 @@ let mnemonic = 'possible pond copy window claw sleep humor breeze tomorrow nerve
   assert(seed.parseMnemonicResult.mnemonicUsable === true);
   assert(seed.parseMnemonicResult.state === 'specifiedSeedIsValid');
   assert(seed.toMnemonic() === mnemonic);
+  assert(seed.derivePrivateKeyHex() === 'ec1366947cbbcbfa1c0946598301390ac0440035c9c8bd077afabe38aec7c329');
 }
 {
   let seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG);
@@ -60,11 +61,12 @@ let mnemonic = 'possible pond copy window claw sleep humor breeze tomorrow nerve
   assert(seed2.birthday == 115);
 }
 {
-  // for compatibility with tevador's code (not currently passing)
   let seed2 = Seed.fromMnemonic('test park taste security oxygen decorate essence ridge ship fish vehicle dream fluid pattern', Seed.MONERO_COINFLAG);
-  console.log(seed2.toString());
   assert(seed2.parseMnemonicResult.mnemonicUsable === true);
   assert(seed2.parseMnemonicResult.state === 'specifiedSeedIsValid');
+  assert(seed2.reserved == 0);
+  assert(seed2.birthday == 957);
+  assert(seed2.coinFlag === 0x539);
   assert(seed2.derivePrivateKeyHex() === '7b816d8134e29393b0333eed4b6ed6edf97c156ad139055a706a6fb9599dcf8c');
 }
 

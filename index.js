@@ -34,10 +34,9 @@ class Seed {
   static unquantizeTimestampToDateObj(t) {
     return new Date(Seed.unquantizeTimestamp(t)*1000);
   }
-
   getSalt() {
-    let prefix = new TextEncoder().encode('Monero 14-word seed');
-    return concatTypedArrays(concatTypedArrays(prefix, BNToUint8Array(this.reserved, 1)), BNToUint8Array(this.birthday, Math.ceil(10/8)));
+    let prefix = new TextEncoder().encode('Monero 14-word seed\0');
+    return concatTypedArrays(concatTypedArrays(prefix, BNToUint8Array(this.reserved, 1)), BNToUint8Array(this.birthday, 4).reverse());
   }
   derivePrivateKey() {
     let derivedKey = crypto.pbkdf2Sync(BNToUint8Array(this.privateKeySeed, 128/8), this.getSalt(), 4096, 32, 'sha256');
@@ -169,6 +168,7 @@ class Seed {
       s += 'quantized birthday: ' + this.birthday + '\n';
       s += 'unquantized birthday: ' + Seed.unquantizeTimestampToDateObj(this.birthday).toUTCString() + '\n';
       s += 'privateKeySeedHex: ' + this.privateKeySeed.toString("hex") + '\n';
+      s += 'salt: ' + Buffer.from(this.getSalt()).toString("hex") + '\n';
       s += 'mnemonic: ' + this.toMnemonic() + '\n';
       s += 'derivedPrivateKeyHex: ' + this.derivePrivateKeyHex() + '\n';
     }
