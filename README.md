@@ -23,6 +23,7 @@ seed.derivePrivateKeyHex()   // the 256-bit private key
 seed.coinFlag                // the coinFlag used (Seed.MONERO_COINFLAG or Seed.AEON_COINFLAG)
 seed.reserved                // the reserved bits
 seed.birthday                // the quantized representation of the seed birthday unix timestamp
+seed.getBirthdayDate()       // a javascript Date object representation of the seed birthday
 
 seed.parseMnemonicResult properties:
   .mnemonicUsable // if true, that means either the seed was perfectly valid, or we were able to repair it

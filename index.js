@@ -31,7 +31,7 @@ class Seed {
   static unquantizeTimestamp(t) {
     return (t*timeStep+epoch);
   }
-  static unquantizeTimestampToDateObj(t) {
+  static unquantizeTimestampToDate(t) {
     return new Date(Seed.unquantizeTimestamp(t)*1000);
   }
   getSalt() {
@@ -160,13 +160,16 @@ class Seed {
 
     return s;
   }
+  getBirthdayDate() {
+    return Seed.unquantizeTimestampToDate(this.birthday);
+  }
   toString() {
     let s = '';
     s += 'coinFlag: 0x' + this.coinFlag.toString(16) + '\n';
     if(!this.parseMnemonicResult || (this.parseMnemonicResult && this.parseMnemonicResult.mnemonicUsable)) {
       s += 'reserved: ' + this.reserved + '\n';
       s += 'quantized birthday: ' + this.birthday + '\n';
-      s += 'unquantized birthday: ' + Seed.unquantizeTimestampToDateObj(this.birthday).toUTCString() + '\n';
+      s += 'unquantized birthday: ' + this.getBirthdayDate().toUTCString() + '\n';
       s += 'privateKeySeedHex: ' + this.privateKeySeed.toString("hex") + '\n';
       s += 'salt: ' + Buffer.from(this.getSalt()).toString("hex") + '\n';
       s += 'mnemonic: ' + this.toMnemonic() + '\n';
