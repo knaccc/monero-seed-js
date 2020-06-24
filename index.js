@@ -47,15 +47,13 @@ class Seed {
     return Buffer.from(this.derivePrivateKey()).toString("hex");
   }
 
-  static unflag(flaggedDataInt32Array, coinFlag) {
+  static flag(flaggedDataInt32Array, coinFlag) {
     let r = flaggedDataInt32Array.slice();
-    r[1] = ((r[1] + coinFlag) % 2048);
+    r[1] = r[1]^coinFlag;
     return r;
   }
-  static flag(unflaggedDataInt32Array, coinFlag) {
-    let r = unflaggedDataInt32Array.slice();
-    r[1] = ((r[1] + 2048 - coinFlag) % 2048);
-    return r;
+  static unflag(unflaggedDataInt32Array, coinFlag) {
+    return Seed.flag(unflaggedDataInt32Array, coinFlag);
   }
   static parseMnemonic(s, coinFlag) {
 
@@ -80,11 +78,7 @@ class Seed {
     }
 
     for(let i=0; i<words.length; i++) {
-      let wordIndex = -1;
-      for(let j=0; j<2048; j++) if(electrumWords.en[j]==words[i]) {
-        wordIndex = j;
-        break;
-      }
+      let wordIndex = electrumWords.en.findIndex(w=>w===words[i]);
       if(wordIndex==-1) {
         if(!result.hasOwnProperty('erasureIndex')) {
           result.erasureIndex = i;
@@ -125,7 +119,7 @@ class Seed {
   }
   static unflaggedPayloadInt32ArrayToBN(a) {
     let n = new BN(0);
-    for(let i=0; i<a.length; i++) n.imuln(2048).iaddn(a[i]);
+    for(let i=0; i<a.length; i++) n.iushln(11).iaddn(a[i]);
     return n;
   }
   static fromMnemonic(specifiedMnemonicWordString, coinFlag) {
