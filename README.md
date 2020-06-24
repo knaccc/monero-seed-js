@@ -18,12 +18,12 @@ node test/test
 var seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG);
 console.log(seed.toString());
 
-seed.getSalt()               // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
 seed.derivePrivateKeyHex()   // the 256-bit private key
+seed.getBirthdayDate()       // a javascript Date object representation of the seed birthday
 seed.coinFlag                // the coinFlag used (Seed.MONERO_COINFLAG or Seed.AEON_COINFLAG)
 seed.reserved                // the reserved bits
 seed.birthday                // the quantized representation of the seed birthday unix timestamp
-seed.getBirthdayDate()       // a javascript Date object representation of the seed birthday
+seed.getSalt()               // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
 
 seed.parseMnemonicResult properties:
   .mnemonicUsable // if true, that means either the seed was perfectly valid, or we were able to repair it
