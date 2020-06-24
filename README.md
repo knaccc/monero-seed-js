@@ -2,21 +2,21 @@
 
 Javascript version of https://github.com/tevador/monero-seed
 
-## To install dependencies (nodejs and javascript libraries):
+### To install dependencies (nodejs and javascript libraries):
 ```
 sudo apt install nodejs
 npm install bn.js reedsolomon
 ```
 
-## To run tests: (look at test/test.js for guidance on how to use Seed class)
+### To run tests: (look at test/test.js for guidance on how to use Seed class)
 ```
 node test/test
 ```
 
-## To restore a seed:
+### To restore a seed:
 ```
 var seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG).toString();
-console.log(seed.toString();
+console.log(seed.toString());
 
 seed.parseMnemonicResult.mnemonicUsable // if true, that means either the seed was perfectly valid, or we were able to repair it
 seed.parseMnemonicResult.state          // will be one of:
@@ -35,7 +35,7 @@ seed.getSalt()                          // the 25-byte salt used when applying 4
 seed.derivePrivateKeyHex()              // the 256-bit private key
 ```
 
-## To create a random seed with reserved bits=0:
+### To create a random seed with reserved bits=0:
 ```
 var seed = Seed.randomSeed(0, new Date('2030-01-01' + 'T00:00:00.000Z').getTime() / 1000, Seed.MONERO_COINFLAG);
 console.log(seed.toString();
