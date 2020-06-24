@@ -59,7 +59,7 @@ class Seed {
     let flaggedDataInt32Array = new Int32Array(mnemonicWordsLen);
 
     let result = {
-      mnemonicUsable: false, // if true, that means either the seed was perfecly valid, or we were able to repair it
+      mnemonicUsable: false, // if true, that means either the seed was perfectly valid, or we were able to repair it
       specifiedMnemonicWordString: s, // the original seed parsed, prior to any repair operations
       state: undefined // will be one of: notEnoughWords, tooManyWords, tooManyUnrecognizedWords, repaired, specifiedSeedIsValid, reedSolomonCheckFailed
     };
