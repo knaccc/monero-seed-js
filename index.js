@@ -46,13 +46,13 @@ class Seed {
     return Buffer.from(this.derivePrivateKey()).toString("hex");
   }
 
-  static flag(flaggedDataInt32Array, coinFlag) {
-    let r = flaggedDataInt32Array.slice();
+  static flag(array, coinFlag) {
+    let r = array.slice();
     r[1] = r[1]^coinFlag;
     return r;
   }
   static unflag(unflaggedDataInt32Array, coinFlag) {
-    return Seed.flag(unflaggedDataInt32Array, coinFlag);
+    return Seed.flag(unflaggedDataInt32Array, coinFlag); // flagging process is symmetrical, since it's XOR
   }
   static parseMnemonic(s, coinFlag) {
 
