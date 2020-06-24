@@ -18,21 +18,26 @@ node test/test
 var seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG).toString();
 console.log(seed.toString());
 
-seed.parseMnemonicResult.mnemonicUsable // if true, that means either the seed was perfectly valid, or we were able to repair it
-seed.parseMnemonicResult.state          // will be one of:
-                                        //   notEnoughWords           (fewer than 14 words specified)
-                                        //   tooManyWords             (more than 14 words specified)
-                                        //   repaired                 (one of the 14 words was unrecognized, and the seed was automatically repaired)
-                                        //   tooManyUnrecognizedWords (more than one word was unrecognized, and the seed cannot therefore be repaired)
-                                        //   specifiedSeedIsValid     (the mnemonic specified passed the Reed Solomon test, and did not need to be repaired)
-                                        //   reedSolomonCheckFailed   (all words specified were valid words, but the Reed Solomon test failed)
-seed.specifiedMnemonicWordString        // the mnemonic passed in, which may end up being different than the repaired mnemonic
-seed.erasureIndex                       // if a word was unrecognized (i.e. not in the list of possible electrum words), the index of the unrecognized word
-seed.detectedErasureWord                // the word that was unrecognized
-seed.erasureWordReplacement             // the replacement word switched with the unrecognized word in the originally specified mnemonic
-seed.privateKeySeed                     // the 128-bit private key seed
-seed.getSalt()                          // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
-seed.derivePrivateKeyHex()              // the 256-bit private key
+seed.getSalt()               // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
+seed.derivePrivateKeyHex()   // the 256-bit private key
+seed.coinFlag                // the coinFlag used (Seed.MONERO_COINFLAG or Seed.AEON_COINFLAG)
+seed.reserved                // the reserved bits
+seed.birthday                // the quantized representation of the seed birthday unix timestamp
+
+seed.parseMnemonicResult properties:
+  .mnemonicUsable // if true, that means either the seed was perfectly valid, or we were able to repair it
+  .state          // will be one of:
+                  //   notEnoughWords           (fewer than 14 words specified)
+                  //   tooManyWords             (more than 14 words specified)
+                  //   repaired                 (one of the 14 words was unrecognized, and the seed was automatically repaired)
+                  //   tooManyUnrecognizedWords (more than one word was unrecognized, and the seed cannot therefore be repaired)
+                  //   specifiedSeedIsValid     (the mnemonic specified passed the Reed Solomon test, and did not need to be repaired)
+                  //   reedSolomonCheckFailed   (all words specified were valid words, but the Reed Solomon test failed)
+.specifiedMnemonicWordString  // the mnemonic passed in, which may end up being different than the repaired mnemonic
+.erasureIndex                 // if a word was unrecognized (i.e. not in the list of possible electrum words), the index of the unrecognized word
+.detectedErasureWord          // the word that was unrecognized
+.erasureWordReplacement       // the replacement word switched with the unrecognized word in the originally specified mnemonic
+.privateKeySeed               // the 128-bit private key seed
 ```
 
 ### To create a random seed with reserved bits=0:
