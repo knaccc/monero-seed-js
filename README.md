@@ -15,7 +15,7 @@ node test/test
 
 ### To restore a seed:
 ```
-var seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG).toString();
+var seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG);
 console.log(seed.toString());
 
 seed.getSalt()               // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
