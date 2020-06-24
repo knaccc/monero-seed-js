@@ -31,7 +31,7 @@ seed.erasureIndex                       // if a word was unrecognized (i.e. not 
 seed.detectedErasureWord                // the word that was unrecognized
 seed.erasureWordReplacement             // the replacement word switched with the unrecognized word in the originally specified mnemonic
 seed.privateKeySeed                     // the 128-bit private key seed
-seed.getSalt()                          // the 25-byte salt used when applying 4096 rounds of pbkdf-hmac-sha256 to the privateKeySeed to derive the private key
+seed.getSalt()                          // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
 seed.derivePrivateKeyHex()              // the 256-bit private key
 ```
 
