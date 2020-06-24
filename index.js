@@ -17,6 +17,23 @@ class Seed {
     this.coinFlag = coinFlag;
     this.parseMnemonicResult = parseMnemonicResult;
   }
+  getReserved() {
+    return this.reserved.toNumber();
+  }
+  getQuantizedBirthday() {
+    return this.birthday.toNumber();
+  }
+  getCoinFlag() {
+    return this.coinFlag;
+  }
+  getParseResult() {
+    if(!this.parseMnemonicResult) throw 'This seed was not created by parsing a mnemonic';
+    return this.parseMnemonicResult;
+  }
+  getPrivateKeySeed() {
+    return this.privateKeySeed;
+  }
+
   equals(a) {
     if(!a) return false;
     return a.reserved.eq(this.reserved)
@@ -26,6 +43,7 @@ class Seed {
   }
 
   static quantizeTimestamp(t) {
+    if(t<epoch) throw 'Date cannot be before epoch date (1st June 2020)';
     return new BN(Math.floor((t-epoch)/timeStep));
   }
   static unquantizeTimestamp(t) {
@@ -34,12 +52,12 @@ class Seed {
   static unquantizeTimestampToDate(t) {
     return new Date(Seed.unquantizeTimestamp(t)*1000);
   }
-  getSalt() {
+  deriveSalt() {
     let prefix = new TextEncoder().encode('Monero 14-word seed\0');
     return concatTypedArrays(concatTypedArrays(prefix, BNToUint8Array(this.reserved, 1)), BNToUint8Array(this.birthday, 4).reverse());
   }
   derivePrivateKey() {
-    let derivedKey = crypto.pbkdf2Sync(BNToUint8Array(this.privateKeySeed, 128/8), this.getSalt(), 4096, 32, 'sha256');
+    let derivedKey = crypto.pbkdf2Sync(BNToUint8Array(this.privateKeySeed, 128/8), this.deriveSalt(), 4096, 32, 'sha256');
     return derivedKey;
   }
   derivePrivateKeyHex() {

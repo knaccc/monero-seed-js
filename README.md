@@ -20,12 +20,12 @@ console.log(seed.toString());
 
 seed.derivePrivateKeyHex()   // the 256-bit private key
 seed.getBirthdayDate()       // a javascript Date object representation of the seed birthday
-seed.coinFlag                // the coinFlag used (Seed.MONERO_COINFLAG or Seed.AEON_COINFLAG)
-seed.reserved                // the reserved bits
-seed.birthday                // the quantized representation of the seed birthday unix timestamp
-seed.getSalt()               // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
+seed.getCoinFlag()           // the coinFlag used, as a javascript number (Seed.MONERO_COINFLAG or Seed.AEON_COINFLAG)
+seed.getReserved()           // the reserved bits, as a javascript number
+seed.deriveSalt()            // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
+seed.getQuantizedBirthday()  // the quantized representation of the seed birthday
 
-seed.parseMnemonicResult properties:
+seed.getParseResult() properties:
   .mnemonicUsable // if true, that means either the seed was perfectly valid, or we were able to repair it
   .state          // will be one of:
                   //   notEnoughWords           (fewer than 14 words specified)
