@@ -170,6 +170,7 @@ class Seed {
       s += 'unquantized birthday: ' + Seed.unquantizeTimestampToDateObj(this.birthday).toUTCString() + '\n';
       s += 'privateKeySeedHex: ' + this.privateKeySeed.toString("hex") + '\n';
       s += 'mnemonic: ' + this.toMnemonic() + '\n';
+      s += 'derivedPrivateKeyHex: ' + this.derivePrivateKeyHex() + '\n';
     }
     if(this.parseMnemonicResult && this.parseMnemonicResult.specifiedMnemonicWordString) {
       s += 'parseMnemonicResult.specifiedMnemonicWordString: ' + this.parseMnemonicResult.specifiedMnemonicWordString + '\n';
