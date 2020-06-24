@@ -34,11 +34,11 @@ seed.parseMnemonicResult properties:
                   //   tooManyUnrecognizedWords (more than one word was unrecognized, and the seed cannot therefore be repaired)
                   //   specifiedSeedIsValid     (the mnemonic specified passed the Reed Solomon test, and did not need to be repaired)
                   //   reedSolomonCheckFailed   (all words specified were valid words, but the Reed Solomon test failed)
-.specifiedMnemonicWordString  // the mnemonic passed in, which may end up being different than the repaired mnemonic
-.erasureIndex                 // if a word was unrecognized (i.e. not in the list of possible electrum words), the index of the unrecognized word
-.detectedErasureWord          // the word that was unrecognized
-.erasureWordReplacement       // the replacement word switched with the unrecognized word in the originally specified mnemonic
-.privateKeySeed               // the 128-bit private key seed
+  .specifiedMnemonicWordString  // the mnemonic passed in, which may end up being different than the repaired mnemonic
+  .erasureIndex                 // if a word was unrecognized (i.e. not in the list of possible electrum words), the index of the unrecognized word
+  .detectedErasureWord          // the word that was unrecognized
+  .erasureWordReplacement       // the replacement word switched with the unrecognized word in the originally specified mnemonic
+  .privateKeySeed               // the 128-bit private key seed
 ```
 
 ### To create a random seed with reserved bits=0:
