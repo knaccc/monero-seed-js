@@ -14,7 +14,7 @@ node test/test
 ```
 
 ### To restore a seed:
-```
+```javascript
 var seed = Seed.fromMnemonic(mnemonic, Seed.MONERO_COINFLAG);
 console.log(seed.toString());
 
@@ -42,7 +42,7 @@ seed.getParseResult() properties:
 ```
 
 ### To create a random seed with reserved bits=0:
-```
+```javascript
 var seed = Seed.randomSeed(0, new Date('2030-01-01' + 'T00:00:00.000Z').getTime() / 1000, Seed.MONERO_COINFLAG);
 console.log(seed.toString();
 
