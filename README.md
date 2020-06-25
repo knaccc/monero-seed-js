@@ -22,8 +22,9 @@ seed.derivePrivateKeyHex()   // the 256-bit private key
 seed.getBirthdayDate()       // a javascript Date object representation of the seed birthday
 seed.getCoinFlag()           // the coinFlag used, as a javascript number (Seed.MONERO_COINFLAG or Seed.AEON_COINFLAG)
 seed.getReserved()           // the reserved bits, as a javascript number
-seed.deriveSalt()            // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
+seed.getPrivateKeySeed()     // the 128-bit seed from which the 256-bit private key is derived
 seed.getQuantizedBirthday()  // the quantized representation of the seed birthday
+seed.deriveSalt()            // the 25-byte salt used when applying 4096 rounds of PBKDF2-HMAC-SHA256 to the privateKeySeed to derive the private key
 
 seed.getParseResult() properties:
   .mnemonicUsable // if true, that means either the seed was perfectly valid, or we were able to repair it
@@ -38,7 +39,6 @@ seed.getParseResult() properties:
   .erasureIndex                 // if a word was unrecognized (i.e. not in the list of possible electrum words), the index of the unrecognized word
   .detectedErasureWord          // the word that was unrecognized
   .erasureWordReplacement       // the replacement word switched with the unrecognized word in the originally specified mnemonic
-  .privateKeySeed               // the 128-bit private key seed
 ```
 
 ### To create a random seed with reserved bits=0:
@@ -46,7 +46,7 @@ seed.getParseResult() properties:
 var seed = Seed.randomSeed(0, new Date('2030-01-01' + 'T00:00:00.000Z').getTime() / 1000, Seed.MONERO_COINFLAG);
 console.log(seed.toString();
 
-// since the seed was created and not parsed, there will be no seed.parseMnemonicResult object present.
+// since the seed was created and not parsed, there will be no seed.getParseResult() object, and so calling this method will throw an exception.
 ```
 
 
