@@ -188,7 +188,7 @@ class Seed {
       s += 'quantized birthday: ' + this.birthday + '\n';
       s += 'unquantized birthday: ' + this.getBirthdayDate().toUTCString() + '\n';
       s += 'privateKeySeedHex: ' + this.privateKeySeed.toString("hex") + '\n';
-      s += 'salt: ' + Buffer.from(this.getSalt()).toString("hex") + '\n';
+      s += 'salt: ' + Buffer.from(this.deriveSalt()).toString("hex") + '\n';
       s += 'mnemonic: ' + this.toMnemonic() + '\n';
       s += 'derivedPrivateKeyHex: ' + this.derivePrivateKeyHex() + '\n';
     }
