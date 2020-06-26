@@ -10,12 +10,12 @@ const mnemonicErrorCorrectionWordsLen = 1;
 
 class Seed {
 
-  constructor(reserved, birthday, privateKeySeed, coinFlag, parseMnemonicResult) {
+  constructor(reserved, birthday, privateKeySeed, coinFlag, parseResult) {
     this.reserved = reserved;
     this.birthday = birthday;
     this.privateKeySeed = privateKeySeed;
     this.coinFlag = coinFlag;
-    this.parseMnemonicResult = parseMnemonicResult;
+    this.parseResult = parseResult;
   }
   getReserved() {
     return this.reserved.toNumber();
@@ -27,8 +27,8 @@ class Seed {
     return this.coinFlag;
   }
   getParseResult() {
-    if(!this.parseMnemonicResult) throw 'This seed was not created by parsing a mnemonic';
-    return this.parseMnemonicResult;
+    if(!this.parseResult) throw 'This seed was not created by parsing a mnemonic';
+    return this.parseResult;
   }
   getPrivateKeySeed() {
     return this.privateKeySeed;
@@ -39,7 +39,7 @@ class Seed {
     return a.reserved.eq(this.reserved)
       && a.birthday.eq(this.birthday)
       && a.privateKeySeed.eq(this.privateKeySeed)
-      && a.coinFlag == this.coinFlag;
+      && a.coinFlag === this.coinFlag;
   }
 
   static quantizeTimestamp(t) {
@@ -57,8 +57,7 @@ class Seed {
     return concatTypedArrays(concatTypedArrays(prefix, BNToUint8Array(this.reserved, 1)), BNToUint8Array(this.birthday, 4).reverse());
   }
   derivePrivateKey() {
-    let derivedKey = crypto.pbkdf2Sync(BNToUint8Array(this.privateKeySeed, 128/8), this.deriveSalt(), 4096, 32, 'sha256');
-    return derivedKey;
+    return crypto.pbkdf2Sync(BNToUint8Array(this.privateKeySeed, 128/8), this.deriveSalt(), 4096, 32, 'sha256');
   }
   derivePrivateKeyHex() {
     return Buffer.from(this.derivePrivateKey()).toString("hex");
@@ -96,7 +95,7 @@ class Seed {
 
     for(let i=0; i<words.length; i++) {
       let wordIndex = electrumWords.en.findIndex(w=>w===words[i]);
-      if(wordIndex==-1) {
+      if(wordIndex===-1) {
         if(!result.hasOwnProperty('erasureIndex')) {
           result.erasureIndex = i;
           result.detectedErasureWord = words[i];
@@ -144,17 +143,17 @@ class Seed {
     // 10 bits for approximate wallet birthday
     // 128 bits for the private key seed
     // 11 bits for checksum
-    let parseMnemonicResult = Seed.parseMnemonic(specifiedMnemonicWordString, coinFlag);
+    let parseResult = Seed.parseMnemonic(specifiedMnemonicWordString, coinFlag);
 
-    if(parseMnemonicResult.mnemonicUsable) {
-      let payload = Seed.unflaggedPayloadInt32ArrayToBN(parseMnemonicResult.validUnflaggedDataInt32Array.slice(1, 14));
+    if(parseResult.mnemonicUsable) {
+      let payload = Seed.unflaggedPayloadInt32ArrayToBN(parseResult.validUnflaggedDataInt32Array.slice(1, 14));
       let reserved = payload.ushrn(10 + 128);
       let birthday = payload.ushrn(128).maskn(10);
       let privateKeySeed = payload.maskn(128);
-      return new Seed(reserved, birthday, privateKeySeed, coinFlag, parseMnemonicResult);
+      return new Seed(reserved, birthday, privateKeySeed, coinFlag, parseResult);
     }
     else {
-      return new Seed(undefined, undefined, undefined, coinFlag, parseMnemonicResult);
+      return new Seed(undefined, undefined, undefined, coinFlag, parseResult);
     }
 
   }
@@ -184,7 +183,7 @@ class Seed {
   toString() {
     let s = '';
     s += 'coinFlag: 0x' + this.coinFlag.toString(16) + '\n';
-    if(!this.parseMnemonicResult || (this.parseMnemonicResult && this.parseMnemonicResult.mnemonicUsable)) {
+    if(!this.parseResult || (this.parseResult && this.parseResult.mnemonicUsable)) {
       s += 'reserved: ' + this.reserved + '\n';
       s += 'quantized birthday: ' + this.birthday + '\n';
       s += 'unquantized birthday: ' + this.getBirthdayDate().toUTCString() + '\n';
@@ -193,16 +192,16 @@ class Seed {
       s += 'mnemonic: ' + this.toMnemonic() + '\n';
       s += 'derivedPrivateKeyHex: ' + this.derivePrivateKeyHex() + '\n';
     }
-    if(this.parseMnemonicResult && this.parseMnemonicResult.specifiedMnemonicWordString) {
-      s += 'parseMnemonicResult.specifiedMnemonicWordString: ' + this.parseMnemonicResult.specifiedMnemonicWordString + '\n';
+    if(this.parseResult && this.parseResult.specifiedMnemonicWordString) {
+      s += 'parseResult.specifiedMnemonicWordString: ' + this.parseResult.specifiedMnemonicWordString + '\n';
     }
-    if(this.parseMnemonicResult) {
-      s += 'parseMnemonicResult.mnemonicUsable: ' + this.parseMnemonicResult.mnemonicUsable + '\n';
-      s += 'parseMnemonicResult.state: ' + this.parseMnemonicResult.state + '\n';
-      if(this.parseMnemonicResult.state!='specifiedSeedIsValid') {
-        s += 'parseMnemonicResult.erasureIndex: ' + this.parseMnemonicResult.erasureIndex + '\n';
-        s += 'parseMnemonicResult.detectedErasureWord: ' + this.parseMnemonicResult.detectedErasureWord + '\n';
-        s += 'parseMnemonicResult.erasureWordReplacement: ' + this.parseMnemonicResult.erasureWordReplacement + '\n';
+    if(this.parseResult) {
+      s += 'parseResult.mnemonicUsable: ' + this.parseResult.mnemonicUsable + '\n';
+      s += 'parseResult.state: ' + this.parseResult.state + '\n';
+      if(this.parseResult.state!='specifiedSeedIsValid') {
+        s += 'parseResult.erasureIndex: ' + this.parseResult.erasureIndex + '\n';
+        s += 'parseResult.detectedErasureWord: ' + this.parseResult.detectedErasureWord + '\n';
+        s += 'parseResult.erasureWordReplacement: ' + this.parseResult.erasureWordReplacement + '\n';
       }
     }
     return s;
@@ -244,7 +243,7 @@ function reedSolomonEncode(unflaggedPayloadInt32Array) {
 }
 
 function reedSolomonCheck(unflaggedDataInt32Array) {
-  return unflaggedDataInt32Array.toString()==reedSolomonEncode(unflaggedDataInt32Array.slice(1, 14)).toString();
+  return unflaggedDataInt32Array.toString()===reedSolomonEncode(unflaggedDataInt32Array.slice(1, 14)).toString();
 }
 function reedSolomonRepair(unflaggedDataInt32Array, erasureIndex) {
   let r = unflaggedDataInt32Array.slice();
@@ -255,4 +254,4 @@ function reedSolomonRepair(unflaggedDataInt32Array, erasureIndex) {
   throw 'This line should be unreachable';
 }
 
-module.exports = { Seed: Seed };
+module.exports = { Seed };
