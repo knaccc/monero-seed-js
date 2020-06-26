@@ -70,6 +70,12 @@ let mnemonic = 'possible pond copy window claw sleep humor breeze tomorrow nerve
   assert(seed2.derivePrivateKeyHex() === '7b816d8134e29393b0333eed4b6ed6edf97c156ad139055a706a6fb9599dcf8c');
 }
 {
+  // attempt to restore the seed with the wrong coinflag
+  let seed2 = Seed.fromMnemonic('test park taste security oxygen decorate essence ridge ship fish vehicle dream fluid pattern', Seed.AEON_COINFLAG);
+  assert(seed2.getParseResult().mnemonicUsable === false);
+  assert(seed2.getParseResult().state === 'reedSolomonCheckFailed');
+}
+{
   let exceptionThrown = false;
   try {
     let seed2 = Seed.randomSeed(0, new Date('2000-01-01' + 'T00:00:00.000Z').getTime() / 1000, Seed.MONERO_COINFLAG);
