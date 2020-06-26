@@ -84,12 +84,10 @@ class Seed {
     let words = s.replace(/ +(?= )/g,'').toLowerCase().trim().split(' '); // remove double spaces, convert to lowercase, trim and split into array of words
     if(words.length<mnemonicWordsLen) {
       result.state = 'notEnoughWords';
-      result.errorMsg = 'Only ' + words.length + ' word(s) present';
       return result;
     }
     if(words.length>mnemonicWordsLen) {
       result.state = 'tooManyWords';
-      result.errorMsg = words.length + ' words present';
       return result;
     }
 
@@ -101,9 +99,8 @@ class Seed {
           result.detectedErasureWord = words[i];
         }
         else {
-          // erasureIndex was already set, which means we've encountered a second invalid word
+          // erasureIndex was already set, which means we've encountered a second invalid word and cannot repair
           result.state = 'tooManyUnrecognizedWords';
-          result.errorMsg = 'More than one unrecognized word found. Cannot repair.';
           return result;
         }
       }
