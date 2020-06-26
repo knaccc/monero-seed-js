@@ -170,7 +170,7 @@ class Seed {
 
     // do sanity check to see if we can parse the mnemonic we've just created
     var sanityCheckResult = Seed.parseMnemonic(s, this.coinFlag);
-    if(sanityCheckResult.state!='specifiedSeedIsValid') {
+    if(sanityCheckResult.state!=='specifiedSeedIsValid') {
       console.log(sanityCheckResult);
       throw 'Sanity check failed. Cannot parse generated mnemonic';
     }
@@ -198,7 +198,7 @@ class Seed {
     if(this.parseResult) {
       s += 'parseResult.mnemonicUsable: ' + this.parseResult.mnemonicUsable + '\n';
       s += 'parseResult.state: ' + this.parseResult.state + '\n';
-      if(this.parseResult.state!='specifiedSeedIsValid') {
+      if(this.parseResult.state!=='specifiedSeedIsValid') {
         s += 'parseResult.erasureIndex: ' + this.parseResult.erasureIndex + '\n';
         s += 'parseResult.detectedErasureWord: ' + this.parseResult.detectedErasureWord + '\n';
         s += 'parseResult.erasureWordReplacement: ' + this.parseResult.erasureWordReplacement + '\n';
